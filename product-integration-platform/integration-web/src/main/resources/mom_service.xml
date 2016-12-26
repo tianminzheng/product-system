@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+     http://www.springframework.org/schema/context  
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+    http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">
+
+	<bean id="internalTargetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://127.0.0.1:61616/" />
+	</bean>
+	
+	<bean id="internalConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop">
+		<property name="connectionFactory" ref="internalTargetConnectionFactory" />
+		<property name="maxConnections" value="20" />
+	</bean>
+	
+	<bean id="internalJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="internalConnectionFactory" />
+	</bean>
+
+	 <bean id="productSyncRequestDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>product.sync.request</value>
+		</constructor-arg>
+	</bean> 
+    
+	<bean id="productSyncResponseDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <constructor-arg>  
+            <value>product.sync.response</value>  
+        </constructor-arg>  
+    </bean> 
+    
+    <bean id="productSyncResponseProducer" class="com.tianyalan.product.integration.route.message.JmsTemplateUtil" scope="prototype">
+		<property name="internalJmsTemplate" ref="internalJmsTemplate"></property>
+		<property name="destination" ref="productSyncResponseDestination"/>
+	</bean>
+ 
+    <bean id="productSyncResponseConsumer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="internalConnectionFactory" />  
+        <property name="destination" ref="productSyncRequestDestination" />  
+        <property name="messageListener" ref="productSyncRequestListener" />  
+    </bean>
+</beans>

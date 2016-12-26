@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="localCacheScope" value="STATEMENT" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.tianyalan.product.core.domain.Product" alias="Product" />
+		<typeAlias type="com.tianyalan.product.core.domain.User" alias="User" />
+		<typeAlias type="com.tianyalan.product.core.domain.Address" alias="Address" />
+		<typeAlias type="com.tianyalan.product.core.domain.Vendor" alias="Vendor" />
+		<typeAlias type="com.tianyalan.product.core.domain.VendorSystem" alias="VendorSystem" />
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.tianyalan.product.mybatis.plugin.SelectCountSqlInterceptor" />
+		<plugin interceptor="com.tianyalan.product.mybatis.plugin.OffsetLimitInterceptor">
+			<property name="dialectClass"
+				value="com.tianyalan.product.mybatis.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+
+	<mappers>
+		<mapper resource="mapper/product_mapper.xml" />
+		<mapper resource="mapper/user_mapper.xml" />
+		<mapper resource="mapper/address_mapper.xml" />
+		<mapper resource="mapper/vendor_mapper.xml" />
+		<mapper resource="mapper/vendor_system_mapper.xml" />
+	</mappers>
+</configuration>

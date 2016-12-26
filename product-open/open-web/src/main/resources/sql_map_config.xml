@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="localCacheScope" value="STATEMENT" />
+	</settings>
+
+	<typeAliases>
+		<!-- 掌上医院门诊服务平台第三放开放接口 -->
+		<typeAlias type="com.tianyalan.product.open.entity.ThirdSupport"
+			alias="ThirdSupport" />
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.tianyalan.product.mybatis.plugin.SelectCountSqlInterceptor" />
+		<plugin interceptor="com.tianyalan.product.mybatis.plugin.OffsetLimitInterceptor">
+			<property name="dialectClass"
+				value="com.tianyalan.product.mybatis.dialect.MySQLDialect" />
+		</plugin>
+	</plugins>
+
+	<mappers>
+		<!-- 掌上医院门诊服务平台第三放开放接口 -->
+		<mapper resource="mapper/open_third_support_mapper.xml" />
+	</mappers>
+</configuration>

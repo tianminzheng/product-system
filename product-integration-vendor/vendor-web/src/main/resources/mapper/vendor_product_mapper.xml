@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.vendor.domain.VendorProduct">
+	<resultMap id="productMap" type="VendorProduct">
+		<id property="id" column="ID" />
+		<result property="code" column="CODE" jdbcType="VARCHAR" />
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="price" column="PRICE" jdbcType="DECIMAL" />	
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<select id="getVendorProductsByTimeRange" parameterType="Map" resultMap="productMap">
+		SELECT *
+		FROM VENDOR_PRODUCT WHERE create_time &gt; #{startTime} and create_time &lt; #{endTime}
+	</select>
+	
+</mapper>

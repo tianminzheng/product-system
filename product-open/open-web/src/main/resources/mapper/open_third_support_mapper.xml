@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.open.entity.ThirdSupport">
+	<resultMap id="thirdSupport" type="ThirdSupport">
+		<id property="id" column="ID" />
+		<result property="organization" column="ORGANIZATION" jdbcType="VARCHAR" />
+		<result property="accessName" column="ACCESS_NAME" jdbcType="VARCHAR" />
+		<result property="accessKey" column="ACCESS_KEY" jdbcType="VARCHAR" />
+		<result property="accessSecretKey" column="ACCESS_SECRET_KEY"
+			jdbcType="VARCHAR" />
+		<result property="accessIp" column="ACCESS_IP" jdbcType="VARCHAR" />
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="validFlag" column="VALID_FLAG" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addThirdSupport" parameterType="ThirdSupport"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO THIRD_SUPPORT_INFO
+		(
+		CREATE_TIME,
+		UPDATE_TIME,
+		VALID_FLAG,
+		ORGANIZATION,
+		ACCESS_NAME,
+		ACCESS_KEY,
+		ACCESS_SECRET_KEY,
+		ACCESS_IP
+		)
+		VALUES
+		(
+		now(),
+		now(),
+		'ENABLE',
+		#{organization, jdbcType=VARCHAR},
+		#{accessName, jdbcType=VARCHAR},
+		#{accessKey, jdbcType=VARCHAR},
+		#{accessSecretKey, jdbcType=VARCHAR},
+		#{accessIp, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateThirdSupport" parameterType="ThirdSupport">
+		UPDATE THIRD_SUPPORT_INFO
+		<set>
+			<if test="accessName!=null">
+				ACCESS_NAME=#{accessName},
+			</if>
+			<if test="accessSecretKey!=null">
+				ACCESS_SECRET_KEY=#{accessSecretKey},
+			</if>
+			<if test="accessKey!=null">
+				ACCESS_KEY=#{accessKey},
+			</if>
+			<if test="hospital.id>0">
+				HOSPITAL_ID=#{hospital.id},
+			</if>
+			<if test="accessIp!=null">
+				ACCESS_IP=#{accessIp},
+			</if>
+			<if test="updateTime!=null">
+				UPDATE_TIME=#{updateTime},
+			</if>
+			<if test="validFlag!=null">
+				VALID_FLAG=#{validFlag}
+			</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+
+	<select id="getThirdSupportById" parameterType="Long"
+		resultMap="thirdSupport">
+		SELECT * FROM THIRD_SUPPORT_INFO WHERE ID = #{id}
+	</select>
+</mapper>

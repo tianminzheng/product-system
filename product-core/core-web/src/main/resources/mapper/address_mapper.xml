@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.core.domain.Address">
+	<resultMap id="addressMap" type="Address">
+		<id property="id" column="ID" />
+		<result property="address" column="ADDRESS" jdbcType="VARCHAR" />
+		<result property="zipCode" column="ZIP_CODE" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="addAddress" parameterType="Address" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO CORE_ADDRESS
+		(
+			ADDRESS,
+			ZIPCODE
+		)
+		VALUES
+		(
+			#{address,jdbcType=VARCHAR},
+			#{zipCode,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getAddressById" parameterType="Long"
+		resultMap="addressMap">
+		SELECT *
+		FROM CORE_ADDRESS WHERE ID=#{id}
+	</select>
+	
+</mapper>

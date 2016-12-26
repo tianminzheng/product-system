@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.client.domain.OrderItem">
+	<resultMap id="orderItemMap" type="OrderItem">
+		<id property="id" column="ID" />
+		<result property="orderId" column="ORDER_ID" jdbcType="BIGINT" />
+		<result property="productCode" column="PRODUCT_CODE" jdbcType="VARCHAR"/>
+		<result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+		<result property="productPrice" column="PRODUCT_PRICE" jdbcType="DECIMAL" />	
+		<result property="itemCount" column="ITEM_COUNT" jdbcType="DECIMAL"/>
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="validFlag" column="VALID_FLAG" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addOrderItems" parameterType="List">
+		INSERT INTO CLIENT_ORDER_ITEM
+		(
+			ORDER_ID,
+			PRODUCT_CODE,
+			PRODUCT_NAME,
+			PRODUCT_PRICE,
+			ITEM_COUNT
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.orderId,jdbcType=VARCHAR},
+				#{item.productCode,jdbcType=VARCHAR},
+				#{item.productName,jdbcType=VARCHAR},
+				#{item.productPrice,jdbcType=NUMERIC},
+				#{item.itemCount,jdbcType=NUMERIC}
+			)
+		</foreach>
+	</insert>
+	
+	<select id="getOrderItemsByOrderId" parameterType="Long"
+		resultMap="orderItemMap">
+		SELECT *
+		FROM CLIENT_ORDER_ITEM WHERE ORDER_ID=#{orderId}
+	</select>
+	
+</mapper>

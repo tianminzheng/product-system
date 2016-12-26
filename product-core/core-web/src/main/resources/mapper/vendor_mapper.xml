@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.core.domain.Vendor">
+	<resultMap id="vendorMap" type="Vendor">
+		<id property="id" column="ID" />
+		<result property="vendorName" column="VENDOR_NAME" jdbcType="VARCHAR" />
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="addressId" column="ADDRESS_ID" jdbcType="BIGINT" />	
+		<result property="vendorSystemId" column="VENDOR_SYSTEM_ID" jdbcType="BIGINT" />			
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="validFlag" column="VALID_FLAG" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getVendorByVendorName" parameterType="String"
+		resultMap="vendorMap">
+		SELECT *
+		FROM CORE_VENDOR WHERE VENDOR_NAME=#{vendorName}
+	</select>
+	
+	<select id="getVendorById" parameterType="Long"
+		resultMap="vendorMap">
+		SELECT *
+		FROM CORE_VENDOR WHERE ID=#{id}
+	</select>
+	
+	<select id="getAllVendors" resultMap="vendorMap">
+		SELECT * FROM CORE_VENDOR WHERE VALID_FLAG='ENABLE'
+	</select>
+	
+	<select id="countChangedVendor" parameterType="HashMap" resultType="int">
+		SELECT COUNT(ID) FROM CORE_VENDOR WHERE UPDATE_TIME &gt;#{lastUpdateTime}
+	</select>
+	
+	<update id="updateVendor" parameterType="Vendor">
+		UPDATE CORE_VENDOR
+		<set>
+			<if test="vendorName != null">
+				VENDOR_NAME=#{vendorName,jdbcType=VARCHAR},
+			</if>
+			UPDATE_TIME = now()
+		</set>
+		where ID=#{id}
+	</update>
+</mapper>

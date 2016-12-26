@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.core.domain.Product">
+	<resultMap id="productMap" type="Product">
+		<id property="id" column="ID" />
+		<result property="productCode" column="PRODUCT_CODE" jdbcType="VARCHAR" />
+		<result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="vendorId" column="VENDOR_ID" jdbcType="BIGINT" />	
+		<result property="price" column="PRICE" jdbcType="DECIMAL" />	
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="validFlag" column="VALID_FLAG" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="addProducts" parameterType="List">
+		INSERT INTO CORE_PRODUCT
+		(
+			PRODUCT_CODE,
+			PRODUCT_NAME,
+			DESCRIPTION,
+			VENDOR_ID,
+			PRICE,
+			CREATE_TIME,
+			UPDATE_TIME,
+			VALID_FLAG
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+				#{item.productCode,jdbcType=VARCHAR},
+				#{item.productName,jdbcType=VARCHAR},
+				#{item.description,jdbcType=VARCHAR},
+				#{item.vendorId,jdbcType=NUMERIC},
+				#{item.price,jdbcType=NUMERIC},
+				now(),
+				now(),
+				'ENABLE'
+			)
+		</foreach>
+	</insert>
+	
+	<select id="getProductByWildcard" parameterType="String" resultMap="productMap">
+		SELECT *
+		FROM CORE_PRODUCT WHERE PRODUCT_NAME like CONCAT('%', #{wildcard}, '%')
+	</select>
+	
+	<select id="getProductByCode" parameterType="String" resultMap="productMap">
+		SELECT *
+		FROM CORE_PRODUCT WHERE PRODUCT_CODE = #{productCode} and VALID_FLAG='ENABLE'
+	</select>
+	
+	<delete id="deleteProducts" parameterType="List">
+		UPDATE CORE_PRODUCT SET VALID_FLAG='DISABLE'
+		WHERE ID in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	
+</mapper>

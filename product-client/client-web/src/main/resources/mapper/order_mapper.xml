@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.client.domain.Order">
+	<resultMap id="orderMap" type="Order">
+		<id property="id" column="ID" />
+		<result property="userId" column="USER_ID" jdbcType="BIGINT" />
+		<result property="vendorId" column="VENDOR_ID" jdbcType="BIGINT"/>
+		<result property="status" column="ORDER_STATUS" jdbcType="VARCHAR"/>
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="validFlag" column="VALID_FLAG" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addOrder" parameterType="Order" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO CLIENT_ORDER
+		(
+			USER_ID,
+			VENDOR_ID,
+			ORDER_STATUS,
+			CREATE_TIME,
+			UPDATE_TIME,
+			VALID_FLAG
+		)
+		VALUES
+		(
+			#{userId,jdbcType=NUMERIC},
+			#{vendorId,jdbcType=NUMERIC},
+			'INITIALIZED',
+			now(),
+			now(),
+			'ENABLE'			
+		)
+	</insert>
+	
+	<update id="updateOrderStatus" parameterType="Order">
+		UPDATE CLIENT_ORDER
+		<set>
+			<if test="status != null">
+				ORDER_STATUS=#{status,jdbcType=VARCHAR},
+			</if>
+			UPDATE_TIME = now()
+		</set>
+		where ID=#{id}
+	</update>
+	
+	<select id="getOrdersByUserId" parameterType="Long"
+		resultMap="orderMap">
+		SELECT *
+		FROM CLIENT_ORDER WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="getOrdersByStatus" parameterType="String"
+		resultMap="orderMap">
+		SELECT *
+		FROM CLIENT_ORDER WHERE ORDER_STATUS=#{status}
+	</select>
+	
+	<select id="getOrderById" parameterType="Long"
+		resultMap="orderMap">
+		SELECT *
+		FROM CLIENT_ORDER WHERE ID=#{id}
+	</select>
+	
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+    "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.tianyalan.product.core.domain.User">
+	<resultMap id="userMap" type="User">
+		<id property="id" column="ID" />
+		<result property="userName" column="USERNAME" jdbcType="VARCHAR" />
+		<result property="password" column="PASSWORD" jdbcType="VARCHAR"/>
+		<result property="realName" column="REALNAME" jdbcType="VARCHAR"/>
+		<result property="addressId" column="ADDRESS_ID" jdbcType="BIGINT" />		
+		<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP" />
+		<result property="validFlag" column="VALID_FLAG" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addUser" parameterType="User" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO CORE_USER
+		(
+			USERNAME,
+			PASSWORD,
+			REALNAME,
+			ADDRESS_ID,
+			CREATE_TIME,
+			UPDATE_TIME,
+			VALID_FLAG
+		)
+		VALUES
+		(
+			#{userName,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{realName,jdbcType=VARCHAR},
+			#{addressId,jdbcType=NUMERIC},
+			now(),
+			now(),
+			'ENABLE'			
+		)
+	</insert>
+	
+	<select id="getUserByUserName" parameterType="String"
+		resultMap="userMap">
+		SELECT *
+		FROM CORE_USER WHERE USERNAME=#{userName}
+	</select>
+	
+	<select id="getUserById" parameterType="Long"
+		resultMap="userMap">
+		SELECT *
+		FROM CORE_USER WHERE ID=#{id}
+	</select>
+	
+	<update id="updateUser" parameterType="USER">
+		UPDATE CORE_USER
+		<set>
+			<if test="userName != null">
+				USERNAME=#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD=#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				REALNAME=#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="addressId > 0">
+				ADDRESS_ID=#{addressId,jdbcType=NUMERIC},
+			</if>
+			UPDATE_TIME = now()
+		</set>
+		where ID=#{id}
+	</update>
+	
+</mapper>

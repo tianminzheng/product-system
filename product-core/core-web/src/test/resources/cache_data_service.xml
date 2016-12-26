@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<caches>
+	<cache table="vendor" mapper_sql_id="getAllVendors" check_sql_id="countChangedVendor"
+		vo_name="com.tianyalan.product.core.domain.Vendor" vo_key="id" refresh="true">
+	</cache>
+	
+	<cache table="vendor_system" mapper_sql_id="getAllVendorSystems" 
+		vo_name="com.tianyalan.product.core.domain.VendorSystem" vo_key="id" refresh="false">
+	</cache>
+</caches>

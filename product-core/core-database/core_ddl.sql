@@ -1,0 +1,64 @@
+﻿set names utf8;
+
+drop database if exists `product_system_core`;
+create database if not exists `product_system_core`;
+
+USE `product_system_core`;
+SET FOREIGN_KEY_CHECKS=0;
+
+-- Core module
+DROP TABLE IF EXISTS `CORE_USER`;
+CREATE TABLE `CORE_USER` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `USERNAME` varchar(20) NOT NULL,
+  `PASSWORD` varchar(20),
+  `REALNAME` varchar(20),
+  `ADDRESS_ID` bigint(20),
+  `CREATE_TIME` datetime,
+  `UPDATE_TIME` datetime,
+  `VALID_FLAG` varchar(10) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `CORE_PRODUCT`;
+CREATE TABLE `CORE_PRODUCT` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `PRODUCT_CODE` varchar(20) NOT NULL,
+  `PRODUCT_NAME` varchar(100),
+  `DESCRIPTION` varchar(100),
+  `VENDOR_ID` bigint(20),
+  `PRICE` decimal(8,2),
+  `CREATE_TIME` datetime,
+  `UPDATE_TIME` datetime,
+  `VALID_FLAG` varchar(10) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `CORE_VENDOR`;
+CREATE TABLE `CORE_VENDOR` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `VENDOR_NAME` varchar(20) NOT NULL,
+  `DESCRIPTION` varchar(100),
+  `ADDRESS_ID` bigint(20),
+  `VENDOR_SYSTEM_ID` bigint(20),
+  `CREATE_TIME` datetime,
+  `UPDATE_TIME` datetime,
+  `VALID_FLAG` varchar(10) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `CORE_VENDOR_SYSTEM`;
+CREATE TABLE `CORE_VENDOR_SYSTEM` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `IP` varchar(20) NOT NULL,
+  `PORT` varchar(100) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `CORE_ADDRESS`;
+CREATE TABLE `CORE_ADDRESS` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ADDRESS` varchar(100),
+  `ZIPCODE` varchar(20),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
